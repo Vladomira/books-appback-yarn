@@ -9,11 +9,7 @@
    },
 
    "production": {
-      "url": "postgres://books-app-main-db-05859efe333cc4959:UrSX25bTr9HV31srhGh2ThKhjprWTa@user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com:5432/books-app-main-db-05859efe333cc4959",
-      "username": "books-app-main-db-05859efe333cc4959",
-      "password": "UrSX25bTr9HV31srhGh2ThKhjprWTa",
-      "database": "books-app-main-db-05859efe333cc4959",
-      "host": "user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com",
+      "url": "",
       "port": "5432",
       "dialect": "postgres"
    }
