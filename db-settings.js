@@ -8,4 +8,9 @@ module.exports = new Sequelize(process.env.DATABASE_URL, {
    password: process.env.PGPASSWORD,
    host: process.env.PGHOST,
    database: process.env.PGDATABASE,
+   dialectOptions: {
+      ssl: {
+         rejectUnauthorized: false,
+      },
+   },
 });
