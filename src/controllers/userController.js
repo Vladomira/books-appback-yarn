@@ -19,6 +19,7 @@ class UserController {
             .json({ user: { id, name, email }, accessToken });
       } catch (error) {
          // status 500 |401
+         console.log("registration error:", error);
          next(error);
          // return next(ApiError.badRequest(error.message));
       }
@@ -29,6 +30,7 @@ class UserController {
          const { email, password } = req.body;
 
          const userData = await UserService.login(email, password);
+         console.log("userData in login", userData);
          res.cookie("refreshToken", userData.refreshToken, {
             httpOnly: true,
             maxAge: 10 * 24 * 60 * 60 * 1000,
