@@ -5,7 +5,6 @@ class UserController {
    async registration(req, res, next) {
       try {
          const { name, email, password } = req.body;
-
          if (!email || !password) {
             return next(ApiError.BadRequest("Incorrect email or password "));
          }

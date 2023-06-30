@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
    res.send("Hello");
 });
 app.get("/favicon.ico", (req, res) => {
-   res.status(204);
+   return res.status(204);
 });
 
 app.use(ErrorMidlware);
