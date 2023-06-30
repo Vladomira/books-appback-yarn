@@ -17,12 +17,12 @@ class UserService {
       const userPayload = { id, name, email };
       const tokens = tokenServise.generateToken(userPayload);
 
-      await db.User.create({
+      const newUser = await db.User.create({
          ...userPayload,
          ...tokens,
          password: hashPassword,
       });
-
+      console.log("newUser", newUser.dataValues);
       return { ...userPayload, ...tokens };
    }
 
