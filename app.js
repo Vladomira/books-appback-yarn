@@ -26,7 +26,7 @@ app.use(
 app.use(express.json());
 app.use("/api", router);
 app.get("/", (req, res) => {
-   res.send("Hello");
+   res.send("Welcome");
 });
 app.get("/favicon.ico", (req, res) => {
    return res.status(204);
