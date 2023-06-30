@@ -1,11 +1,18 @@
 {
    "development": {
-      "username": "postgres",
-      "password": "science1974",
-      "database": "books_app",
-      "host": "localhost",
+      "url": "postgres://books-app-yarn-main-db-044d2aee1d2293566:eNY5D3fkYMEk1EstuWkUuz8KMjXKwm@user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com:5432/books-app-yarn-main-db-044d2aee1d2293566",
+      "database": "books-app-yarn-main-db-044d2aee1d2293566",
+      "username": "books-app-yarn-main-db-044d2aee1d2293566",
+      "host": "user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com",
+      "password": "eNY5D3fkYMEk1EstuWkUuz8KMjXKwm",
       "port": 5432,
       "dialect": "postgres",
+      "dialectOptions": {
+         "ssl": {
+            "require": true,
+            "rejectUnauthorized": false
+         }
+      },
       "operatorsAliases": 0
    },
 
