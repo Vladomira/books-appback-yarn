@@ -16,6 +16,12 @@
       "host": "user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com",
       "password": "eNY5D3fkYMEk1EstuWkUuz8KMjXKwm",
       "port": 5432,
-      "dialect": "postgres"
+      "dialect": "postgres",
+      "dialectOptions": {
+         "ssl": {
+            "require": true,
+            "rejectUnauthorized": false
+         }
+      }
    }
 }
