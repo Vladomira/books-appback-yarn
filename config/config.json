@@ -10,7 +10,7 @@
 
    "production": {
       "url": "postgres://books-app-yarn-main-db-044d2aee1d2293566:eNY5D3fkYMEk1EstuWkUuz8KMjXKwm@user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com:5432/books-app-yarn-main-db-044d2aee1d2293566",
-      "port": "5432",
+      "port": 5432,
       "dialect": "postgres"
    }
 }
