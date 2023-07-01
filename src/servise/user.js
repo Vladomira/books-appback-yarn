@@ -17,12 +17,11 @@ class UserService {
       const userPayload = { id, name, email };
       const tokens = tokenServise.generateToken(userPayload);
 
-      const newUser = await db.User.create({
+      await db.User.create({
          ...userPayload,
          ...tokens,
          password: hashPassword,
       });
-      console.log("newUser", newUser.dataValues);
       return { ...userPayload, ...tokens };
    }
 
@@ -53,7 +52,10 @@ class UserService {
       if (!user) {
          throw ApiError.BadRequest(`You are not authorized`);
       }
-      await db.User.update({ refreshToken: null }, { where: { refreshToken } });
+      await db.User.update(
+         { refreshToken: null, accessToken: null },
+         { where: { refreshToken } }
+      );
       //   accessToken: null
 
       return refreshToken;
@@ -62,7 +64,6 @@ class UserService {
       if (!refreshToken) {
          throw ApiError.Unauthorized();
       }
-      console.log("555555", refreshToken);
       const userData = tokenServise.validateRefreshToken(refreshToken);
       const tokenFromDb = await tokenServise.findToken(refreshToken);
       if (!userData || !tokenFromDb) {

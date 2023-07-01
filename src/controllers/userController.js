@@ -1,6 +1,12 @@
 const UserService = require("../servise/user");
 const ApiError = require("../error/ApiError");
 
+const cookieOptions = {
+   httpOnly: true,
+   maxAge: 10 * 24 * 60 * 60 * 1000,
+   domain: "localhost",
+   path: "/",
+};
 class UserController {
    async registration(req, res, next) {
       try {
@@ -9,17 +15,13 @@ class UserController {
             return next(ApiError.BadRequest("Incorrect email or password "));
          }
          const userData = await UserService.registration(name, email, password);
-         res.cookie("refreshToken", userData.refreshToken, {
-            httpOnly: true,
-            maxAge: 10 * 24 * 60 * 60 * 1000,
-         });
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
          const { id, accessToken } = userData;
          return res
             .status(201)
             .json({ user: { id, name, email }, accessToken });
       } catch (error) {
          // status 500 |401
-         console.log("registration error:", error);
          next(error);
          // return next(ApiError.badRequest(error.message));
       }
@@ -30,12 +32,7 @@ class UserController {
          const { email, password } = req.body;
 
          const userData = await UserService.login(email, password);
-         console.log("userData in login", userData);
-         res.cookie("refreshToken", userData.refreshToken, {
-            httpOnly: true,
-            maxAge: 10 * 24 * 60 * 60 * 1000,
-         });
-
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
          const { accessToken, id, name } = userData;
 
          return res.status(201).json({
@@ -64,10 +61,7 @@ class UserController {
       try {
          const { refreshToken } = req.cookies;
          const userData = await UserService.refresh(refreshToken);
-         res.cookie("refreshToken", userData.refreshToken, {
-            httpOnly: true,
-            maxAge: 10 * 24 * 60 * 60 * 1000,
-         });
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
          const { accessToken, id, name, email } = userData;
          return res.status(201).json({
             user: { id, name, email },
