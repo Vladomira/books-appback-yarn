@@ -14,9 +14,9 @@ const app = express();
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 app.use(cookieParser());
-
+// "http://localhost:3000"
 const corsOptions = {
-   origin: ["http://localhost:3000", "https://vladomira-book-app.netlify.app/"],
+   origin: "https://vladomira-book-app.netlify.app/",
    credentials: true,
    maxAge: 10 * 24 * 60 * 60 * 1000,
    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
