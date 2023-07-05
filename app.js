@@ -16,7 +16,7 @@ router.use(bodyParser.json());
 app.use(cookieParser());
 
 const corsOptions = {
-   origin: "http://localhost:3000",
+   origin: ["http://localhost:3000", "https://vladomira-book-app.netlify.app/"],
    credentials: true,
    maxAge: 10 * 24 * 60 * 60 * 1000,
    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -24,6 +24,7 @@ const corsOptions = {
    exposedHeaders: ["set-cookie"],
    allowedHeaders: "Content-Type, Authorization",
 };
+
 app.use(cors(corsOptions));
 app.options("*", cors());
 
