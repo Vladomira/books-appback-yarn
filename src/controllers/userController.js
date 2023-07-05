@@ -13,7 +13,7 @@ const cookieOptions = (req) => {
       maxAge: 10 * 24 * 60 * 60 * 1000,
       domain: "http://localhost:3000",
       path: currentPath,
-      SameSite: None,
+      SameSite: "None",
    };
 };
 class UserController {
