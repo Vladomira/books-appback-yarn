@@ -1,17 +1,20 @@
 const { Sequelize } = require("sequelize");
 
-module.exports = new Sequelize(process.env.DATABASE_URL);
+let sequelize;
 
-// development;
-// module.exports = new Sequelize(
-//    process.env.DB_NAME_DVPLMNT,
-//    process.env.DB_USER_DVPLMNT,
-//    process.env.DB_PASSWORD_DVPLMNT,
-//    {
-//       dialect: "postgres",
-//       user: "root",
-//       password: "science",
-//       host: process.env.DB_HOST_DVPLMNT || "localhost",
-//       PORT: 5432,
-//    }
-// );
+if (process.env.NODE_ENV === "production") {
+   sequelize = new Sequelize(process.env.DATABASE_URL);
+} else {
+   sequelize = new Sequelize(
+      process.env.DB_NAME_DVPLMNT,
+      process.env.DB_USER_DVPLMNT,
+      process.env.DB_PASSWORD_DVPLMNT,
+      {
+         dialect: "postgres",
+         host: process.env.DB_HOST_DVPLMNT || "localhost",
+         port: 5432,
+      }
+   );
+}
+
+module.exports = sequelize;
