@@ -17,13 +17,9 @@ class UserController {
             );
          }
          const userData = await UserService.registration(name, email, password);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions).send(
-            "Cookie set"
-         );
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
          const { id, accessToken } = userData;
-         return res
-            .status(201)
-            .json({ user: { id, name, email }, accessToken });
+         res.status(201).json({ user: { id, name, email }, accessToken });
       } catch (error) {
          next(error);
       }
@@ -34,11 +30,10 @@ class UserController {
          const { email, password } = req.body;
 
          const userData = await UserService.login(email, password);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions).send(
-            "Cookie set"
-         );
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
+
          const { accessToken, id, name } = userData;
-         return res.status(201).json({
+         res.status(201).json({
             user: { id, name, email },
             accessToken,
          });
@@ -52,12 +47,11 @@ class UserController {
          const { refreshToken } = req.cookies;
          const userData = await UserService.refresh(refreshToken);
 
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions).send(
-            "Cookie set"
-         );
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
+
          const { accessToken, id, name, email } = userData;
 
-         return res.status(201).json({
+         res.status(201).json({
             user: { id, name, email },
             accessToken,
          });
@@ -71,7 +65,7 @@ class UserController {
          const token = await UserService.logout(refreshToken);
          res.clearCookie("refreshToken");
 
-         return res.status(201).json(token);
+         res.status(201).json(token);
       } catch (error) {
          next(error);
       }

@@ -1,9 +1,8 @@
 const { Sequelize } = require("sequelize");
-const { pg } = require("pg");
 
 module.exports = new Sequelize(process.env.DATABASE_URL);
 
-// development
+// development;
 // module.exports = new Sequelize(
 //    process.env.DB_NAME_DVPLMNT,
 //    process.env.DB_USER_DVPLMNT,

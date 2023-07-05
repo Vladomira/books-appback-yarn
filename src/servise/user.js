@@ -42,7 +42,7 @@ class UserService {
          await db.User.update({ ...tokens }, { where: { email } });
          return { ...userPayload, ...tokens };
       } catch (error) {
-         throw ApiError.Unauthorized();
+         throw error;
       }
    }
 
