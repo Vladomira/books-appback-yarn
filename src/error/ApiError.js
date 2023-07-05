@@ -13,10 +13,6 @@ class ApiError extends Error {
    static conflict(message) {
       return new ApiError(409, message);
    }
-
-   static Forbidden(message) {
-      return new ApiError(403, message);
-   }
 }
 
 module.exports = ApiError;

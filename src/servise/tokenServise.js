@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const db = require("../../database/models/index");
 
 class TokenServise {
-   generateToken(payload) {
+   generateTokens(payload) {
       const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET_KEY, {
-         expiresIn: "3h",
+         expiresIn: "1d",
       });
       const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET_KEY, {
          expiresIn: "10d",
@@ -14,6 +14,7 @@ class TokenServise {
    }
 
    validateAccessToken(token) {
+      console.log("token", token);
       try {
          const userData = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
          return userData;

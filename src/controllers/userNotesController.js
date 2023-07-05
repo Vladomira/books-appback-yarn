@@ -5,13 +5,13 @@ class userNotes {
    async createNote(req, res, next) {
       try {
          if (!req.user) {
-            return next(ApiError.badRequest("Please authorize"));
+            return next(ApiError.Unauthorized());
          }
 
          const { bookId } = req.params;
          const { text, chapter } = req.body;
          if (!chapter) {
-            return next(ApiError.badRequest("No any notes to save"));
+            return next(ApiError.Unauthorized());
          }
          const notes = await db.UserNotes.create({
             bookId,
@@ -21,13 +21,13 @@ class userNotes {
          });
          return res.status(201).json(notes);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 
    async updateNoteById(req, res, next) {
       if (!req.user) {
-         return next(ApiError.badRequest("Not authorized"));
+         return next(ApiError.Unauthorized());
       }
       const { noteId } = req.params;
       const data = req.body;
@@ -38,19 +38,19 @@ class userNotes {
             where: { id: noteId },
          });
          if (!updatedNote) {
-            return next(ApiError.badRequest("Book doesn't exist"));
+            return next(ApiError.BadRequest("Book doesn't exist"));
          }
          const updatedBook = await db.UserNotes.findByPk(noteId);
          return res.status(200).json(updatedBook);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 
    async getNotes(req, res, next) {
       try {
          if (!req.user) {
-            return next(ApiError.badRequest("Not authorized"));
+            return next(ApiError.Unauthorized());
          }
          const { id } = req.user;
          const notes = await db.UserNotes.findAll({
@@ -59,14 +59,14 @@ class userNotes {
 
          res.status(201).json(notes);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 
    async getNotesByBookId(req, res, next) {
       try {
          if (!req.user) {
-            return next(ApiError.badRequest("Not authorized"));
+            return next(ApiError.Unauthorized());
          }
          const { bookId } = req.params;
          const bookNotes = await db.UserNotes.findAll({
@@ -78,13 +78,13 @@ class userNotes {
 
          res.status(201).json(bookNotes);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
    async deleteNote(req, res, next) {
       try {
          if (!req.user) {
-            return next(ApiError.badRequest("Not authorized"));
+            return next(ApiError.Unauthorized());
          }
          const { noteId } = req.params;
          const deletedNote = await db.UserNotes.findByPk(noteId);
@@ -92,7 +92,7 @@ class userNotes {
          await deletedNote.destroy();
          res.status(201).json(deletedNote.id);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 }

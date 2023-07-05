@@ -12,7 +12,9 @@ class UserController {
       try {
          const { name, email, password } = req.body;
          if (!email || !password) {
-            return next(ApiError.BadRequest("Incorrect email or password "));
+            return next(
+               new ApiError.BadRequest("Incorrect email or password ")
+            );
          }
          const userData = await UserService.registration(name, email, password);
          res.cookie("refreshToken", userData.refreshToken, cookieOptions);
@@ -21,9 +23,7 @@ class UserController {
             .status(201)
             .json({ user: { id, name, email }, accessToken });
       } catch (error) {
-         // status 500 |401
          next(error);
-         // return next(ApiError.badRequest(error.message));
       }
    }
 
@@ -34,18 +34,31 @@ class UserController {
          const userData = await UserService.login(email, password);
          res.cookie("refreshToken", userData.refreshToken, cookieOptions);
          const { accessToken, id, name } = userData;
+         return res.status(201).json({
+            user: { id, name, email },
+            accessToken,
+         });
+      } catch (error) {
+         return next(error);
+      }
+   }
+
+   async refreshUser(req, res, next) {
+      try {
+         const { refreshToken } = req.cookies;
+         const userData = await UserService.refresh(refreshToken);
+
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
+         const { accessToken, id, name, email } = userData;
 
          return res.status(201).json({
             user: { id, name, email },
             accessToken,
          });
       } catch (error) {
-         // 401
-         return next(ApiError.BadRequest(error, error.message));
-         // next(error);
+         return next(error);
       }
    }
-
    async logout(req, res, next) {
       try {
          const { refreshToken } = req.cookies;
@@ -53,20 +66,6 @@ class UserController {
          res.clearCookie("refreshToken");
 
          return res.status(201).json(token);
-      } catch (error) {
-         next(error);
-      }
-   }
-   async refresh(req, res, next) {
-      try {
-         const { refreshToken } = req.cookies;
-         const userData = await UserService.refresh(refreshToken);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
-         const { accessToken, id, name, email } = userData;
-         return res.status(201).json({
-            user: { id, name, email },
-            accessToken,
-         });
       } catch (error) {
          next(error);
       }

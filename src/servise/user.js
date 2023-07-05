@@ -7,7 +7,7 @@ class UserService {
    async registration(name, email, password) {
       const candidate = await db.User.findOne({ where: { email } });
       if (candidate) {
-         throw ApiError.BadRequest(`User with email ${email} already exists`);
+         throw ApiError.conflict(`User with email ${email} already exists`);
       }
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
@@ -15,7 +15,7 @@ class UserService {
       const id = Date.now().toString();
 
       const userPayload = { id, name, email };
-      const tokens = tokenServise.generateToken(userPayload);
+      const tokens = tokenServise.generateTokens(userPayload);
 
       await db.User.create({
          ...userPayload,
@@ -38,48 +38,49 @@ class UserService {
          }
 
          const userPayload = { id: user.id, name: user.name, email };
-         const tokens = tokenServise.generateToken(userPayload);
+         const tokens = tokenServise.generateTokens(userPayload);
          await db.User.update({ ...tokens }, { where: { email } });
          return { ...userPayload, ...tokens };
       } catch (error) {
-         // 401
-         throw ApiError.BadRequest(error.message);
+         throw ApiError.Unauthorized();
       }
    }
 
+   async refresh(refreshToken) {
+      if (!refreshToken || refreshToken.trim() === "") {
+         throw ApiError.Unauthorized();
+      }
+
+      const userFromDb = await db.User.findOne({ refreshToken });
+      const userData = tokenServise.validateRefreshToken(refreshToken);
+
+      if (!userData || !userFromDb) {
+         throw ApiError.Unauthorized();
+      }
+      const findById = await db.User.findByPk(userData.id);
+      const userPayload = {
+         id: findById.dataValues.id,
+         name: findById.dataValues.name,
+         email: findById.dataValues.email,
+      };
+      const tokens = tokenServise.generateTokens(userPayload);
+      await db.User.update({ ...tokens }, { where: { id: findById.id } });
+
+      return { ...userPayload, ...tokens };
+   }
    async logout(refreshToken) {
       const user = await db.User.findOne({ where: { refreshToken } });
       if (!user) {
-         throw ApiError.BadRequest(`You are not authorized`);
+         throw ApiError.Unauthorized();
       }
       await db.User.update(
          { refreshToken: null, accessToken: null },
          { where: { refreshToken } }
       );
-      //   accessToken: null
 
       return refreshToken;
    }
-   async refresh(refreshToken) {
-      if (!refreshToken) {
-         throw ApiError.Unauthorized();
-      }
-      const userData = tokenServise.validateRefreshToken(refreshToken);
-      const tokenFromDb = await tokenServise.findToken(refreshToken);
-      if (!userData || !tokenFromDb) {
-         throw ApiError.Unauthorized();
-      }
-
-      const user = await db.User.findByPk(userData.id);
-      const userPayload = { id: user.id, name: user.name, email: user.email };
-      const tokens = tokenServise.generateToken(userPayload);
-      await db.User.update({ ...tokens }, { where: { id: userData.id } });
-
-      return { ...userPayload, ...tokens };
-   }
-
    async getUser(req, res) {
-      console.log("!req.user", req.user);
       try {
          if (!req.user) {
             throw ApiError.Unauthorized();
@@ -94,23 +95,6 @@ class UserService {
          });
       } catch (error) {
          return ApiError.BadRequest(error.message);
-      }
-   }
-
-   async deleteUser(req, res) {
-      // зробити форму з вводом пароля для того, щоб видалитись
-      const userId = req.params.id;
-      try {
-         const user = await db.User.findByPk(userId);
-
-         if (!user) {
-            return ApiError.internal(`User doesn't exist`);
-         }
-         // перевірку на пароль user.password === password але треба з джвт токеном звіряти
-         await user.destroy();
-         res.status(200).json({ message: "User deleted successfully" });
-      } catch (error) {
-         return ApiError.badRequest(error.message);
       }
    }
 }

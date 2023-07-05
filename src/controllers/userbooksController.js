@@ -6,7 +6,7 @@ class UserBooksController {
    async addUserBook(req, res, next) {
       try {
          if (!req.user) {
-            return next(ApiError.badRequest("Please authorize"));
+            return next(ApiError.Unauthorized());
          }
          const { bookId } = req.params;
          const book = await db.UserBooks.findOne({
@@ -17,6 +17,7 @@ class UserBooksController {
          }
          const { favorite, finished, inProgress, author, title, image } =
             req.body.book;
+
          const newUserBook = await db.UserBooks.create({
             bookId,
             favorite,
@@ -27,17 +28,16 @@ class UserBooksController {
             author,
             title,
          });
-         return res.json(newUserBook);
+         return res.json(newUserBook.dataValues);
       } catch (error) {
-         console.log("123321", error);
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 
    async getUserBooks(req, res, next) {
       try {
          if (!req.user) {
-            return next(ApiError.badRequest("Not authorized"));
+            return next(ApiError.Unauthorized());
          }
          const { id } = req.user;
          const books = await db.UserBooks.findAll({
@@ -46,13 +46,13 @@ class UserBooksController {
 
          res.json(books);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 
    async updateBookStatus(req, res, next) {
       if (!req.user) {
-         return next(ApiError.badRequest("Not authorized"));
+         return next(ApiError.Unauthorized());
       }
       const { id } = req.params;
       const data = req.body;
@@ -61,30 +61,30 @@ class UserBooksController {
             where: { id },
          });
          if (!book) {
-            return next(ApiError.badRequest("Book doesn't exist"));
+            return next(ApiError.BadRequest("Book doesn't exist"));
          }
          const updatedBook = await db.UserBooks.findByPk(id);
          return res.status(200).json(updatedBook);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 
    async deleteBookById(req, res, next) {
       try {
          if (!req.user) {
-            return next(ApiError.badRequest("Not authorized"));
+            return next(ApiError.Unauthorized);
          }
          const { id } = req.params; //!!!!databse ID
          const deletedContact = await db.UserBooks.findByPk(id);
 
          if (!deletedContact) {
-            return next(ApiError.badRequest("Book doesn't exist"));
+            return next(ApiError.BadRequest("Book doesn't exist"));
          }
          await deletedContact.destroy();
          res.json(deletedContact.id);
       } catch (error) {
-         return next(ApiError.badRequest(error.message));
+         return next(ApiError.BadRequest(error.message));
       }
    }
 }
