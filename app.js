@@ -18,10 +18,14 @@ app.use(cookieParser());
 const corsOptions = {
    origin: "http://localhost:3000",
    credentials: true,
+   maxAge: 10 * 24 * 60 * 60 * 1000,
+   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
    optionSuccessStatus: 200,
    exposedHeaders: ["set-cookie"],
+   allowedHeaders: "Content-Type, Authorization",
 };
 app.use(cors(corsOptions));
+app.options("*", cors());
 
 app.use(express.json());
 app.use("/api", router);

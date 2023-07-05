@@ -8,9 +8,9 @@ const domain =
 
 const cookieOptions = {
    httpOnly: true,
-   // maxAge: 10 * 24 * 60 * 60 * 1000,
-   secure: true,
-   sameSite: "none",
+   maxAge: 10 * 24 * 60 * 60 * 1000,
+   Secure: true,
+   SameSite: "none",
 };
 
 class UserController {
