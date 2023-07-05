@@ -6,15 +6,23 @@ const domain =
       ? "vladomira-book-app.netlify.app/"
       : "localhost";
 
-const cookieOptions = (req) => {
-   const currentPath = req.path;
-   return {
-      httpOnly: true,
-      maxAge: 10 * 24 * 60 * 60 * 1000,
-      // domain: "http://localhost:3000",
-      path: currentPath,
-   };
+const cookieOptions = {
+   httpOnly: true,
+   maxAge: 10 * 24 * 60 * 60 * 1000,
+   secure: true,
+   sameSite: "none",
 };
+// const cookieOptions = (req) => {
+//    const currentPath = req.path;
+//    return {
+//       httpOnly: true,
+//       maxAge: 10 * 24 * 60 * 60 * 1000,
+//       secure: true,
+//       sameSite: "none",
+//       // domain: "http://localhost:3000",
+//       // path: currentPath,
+//    };
+// };
 class UserController {
    async registration(req, res, next) {
       try {
@@ -25,7 +33,7 @@ class UserController {
             );
          }
          const userData = await UserService.registration(name, email, password);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions(req));
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
          const { id, accessToken } = userData;
          res.status(201).json({ user: { id, name, email }, accessToken });
       } catch (error) {
@@ -38,7 +46,7 @@ class UserController {
          const { email, password } = req.body;
 
          const userData = await UserService.login(email, password);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions(req));
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
 
          const { accessToken, id, name } = userData;
          res.status(201).json({
@@ -55,7 +63,7 @@ class UserController {
          const { refreshToken } = req.cookies;
          const userData = await UserService.refresh(refreshToken);
 
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions(req));
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
 
          const { accessToken, id, name, email } = userData;
 
