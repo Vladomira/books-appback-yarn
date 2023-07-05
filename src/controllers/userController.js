@@ -17,7 +17,9 @@ class UserController {
             );
          }
          const userData = await UserService.registration(name, email, password);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions).send(
+            "Cookie set"
+         );
          const { id, accessToken } = userData;
          return res
             .status(201)
@@ -32,7 +34,9 @@ class UserController {
          const { email, password } = req.body;
 
          const userData = await UserService.login(email, password);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions).send(
+            "Cookie set"
+         );
          const { accessToken, id, name } = userData;
          return res.status(201).json({
             user: { id, name, email },
@@ -48,7 +52,9 @@ class UserController {
          const { refreshToken } = req.cookies;
          const userData = await UserService.refresh(refreshToken);
 
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions).send(
+            "Cookie set"
+         );
          const { accessToken, id, name, email } = userData;
 
          return res.status(201).json({
