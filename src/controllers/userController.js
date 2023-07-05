@@ -30,13 +30,15 @@ class UserController {
          const { email, password } = req.body;
 
          const userData = await UserService.login(email, password);
-         res.cookie("refreshToken", userData.refreshToken, cookieOptions);
 
          const { accessToken, id, name } = userData;
          res.status(201).json({
             user: { id, name, email },
             accessToken,
          });
+         res.cookie("refreshToken", userData.refreshToken, cookieOptions).send(
+            "Cookie set"
+         );
       } catch (error) {
          return next(error);
       }
