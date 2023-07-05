@@ -5,7 +5,7 @@ const cookieOptions = {
    httpOnly: true,
    maxAge: 10 * 24 * 60 * 60 * 1000,
    domain: "localhost",
-   path: "/",
+   path: "/auth",
 };
 class UserController {
    async registration(req, res, next) {
