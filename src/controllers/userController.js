@@ -11,7 +11,7 @@ const cookieOptions = (req) => {
    return {
       httpOnly: true,
       maxAge: 10 * 24 * 60 * 60 * 1000,
-      domain: "localhost",
+      domain: "http://localhost:3000",
       path: currentPath,
    };
 };
