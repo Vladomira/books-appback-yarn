@@ -50,8 +50,9 @@ class UserService {
       if (!refreshToken || refreshToken.trim() === "") {
          throw ApiError.Unauthorized();
       }
-
-      const userFromDb = await db.User.findOne({ refreshToken });
+      const userFromDb = await db.User.findOne({
+         wehere: { refreshToken: refreshToken },
+      });
       const userData = tokenServise.validateRefreshToken(refreshToken);
 
       if (!userData || !userFromDb) {
