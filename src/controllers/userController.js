@@ -8,21 +8,11 @@ const domain =
 
 const cookieOptions = {
    httpOnly: true,
-   maxAge: 10 * 24 * 60 * 60 * 1000,
+   // maxAge: 10 * 24 * 60 * 60 * 1000,
    secure: true,
    sameSite: "none",
 };
-// const cookieOptions = (req) => {
-//    const currentPath = req.path;
-//    return {
-//       httpOnly: true,
-//       maxAge: 10 * 24 * 60 * 60 * 1000,
-//       secure: true,
-//       sameSite: "none",
-//       // domain: "http://localhost:3000",
-//       // path: currentPath,
-//    };
-// };
+
 class UserController {
    async registration(req, res, next) {
       try {
